@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WhoseShoutDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="coffeeDate">
+          <Key>
+            <PropertyRef Name="coffeeDateID" />
+          </Key>
+          <Property Name="coffeeDateID" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="dateTime" Type="datetime" Nullable="false" />
+          <Property Name="venue" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="spent" Type="money" />
+        </EntityType>
+        <EntityType Name="Colleagues">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="ColleagueId" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_email">
+          <End Role="Colleagues" Type="Self.Colleagues" Multiplicity="1" />
+          <End Role="coffeeDate" Type="Self.coffeeDate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Colleagues">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="coffeeDate">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WhoseShoutDBModelStoreContainer">
+          <EntitySet Name="coffeeDate" EntityType="Self.coffeeDate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Colleagues" EntityType="Self.Colleagues" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_email" Association="Self.FK_email">
+            <End Role="Colleagues" EntitySet="Colleagues" />
+            <End Role="coffeeDate" EntitySet="coffeeDate" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WhoseShoutDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="coffeeDate">
+          <Key>
+            <PropertyRef Name="coffeeDateID" />
+          </Key>
+          <Property Name="coffeeDateID" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="venue" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Colleague" Relationship="Self.FK_email" FromRole="coffeeDate" ToRole="Colleagues" />
+          <Property Name="spent" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityType Name="Colleague">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="ColleagueId" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="coffeeDates" Relationship="Self.FK_email" FromRole="Colleagues" ToRole="coffeeDate" />
+        </EntityType>
+        <Association Name="FK_email">
+          <End Role="Colleagues" Type="Self.Colleague" Multiplicity="1" />
+          <End Role="coffeeDate" Type="Self.coffeeDate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Colleagues">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="coffeeDate">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WhoseShoutDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="coffeeDates" EntityType="Self.coffeeDate" />
+          <EntitySet Name="Colleagues" EntityType="Self.Colleague" />
+          <AssociationSet Name="FK_email" Association="Self.FK_email">
+            <End Role="Colleagues" EntitySet="Colleagues" />
+            <End Role="coffeeDate" EntitySet="coffeeDates" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WhoseShoutDBModelStoreContainer" CdmEntityContainer="WhoseShoutDBEntities">
+          <EntitySetMapping Name="coffeeDates">
+            <EntityTypeMapping TypeName="WhoseShoutDBModel.coffeeDate">
+              <MappingFragment StoreEntitySet="coffeeDate">
+                <ScalarProperty Name="spent" ColumnName="spent" />
+                <ScalarProperty Name="coffeeDateID" ColumnName="coffeeDateID" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="dateTime" ColumnName="dateTime" />
+                <ScalarProperty Name="venue" ColumnName="venue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Colleagues">
+            <EntityTypeMapping TypeName="WhoseShoutDBModel.Colleague">
+              <MappingFragment StoreEntitySet="Colleagues">
+                <ScalarProperty Name="ColleagueId" ColumnName="ColleagueId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
